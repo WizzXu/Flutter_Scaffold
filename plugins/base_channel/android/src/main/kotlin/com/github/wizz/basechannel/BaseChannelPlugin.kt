@@ -1,6 +1,9 @@
 package com.github.wizz.basechannel
 
 import androidx.annotation.NonNull
+import com.github.wizz.basechannel.channel.XBaseChannelHandler
+import com.github.wizz.basechannel.channel.XChannelHandler
+import com.github.wizz.basechannel.channel.XChannelService
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -19,9 +22,13 @@ class BaseChannelPlugin: FlutterPlugin, MethodCallHandler {
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "base_channel")
     channel.setMethodCallHandler(this)
+    XChannelService.getInstance().init(channel)
+    XChannelService.getInstance().registerChannelHandler(XChannelHandler())
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    //val handler = XChannelService.getInstance().
+    // TODO: 2021/8/19 xwy
     if (call.method == "getPlatformVersion") {
       result.success("Android ${android.os.Build.VERSION.RELEASE}")
     } else {

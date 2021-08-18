@@ -27,9 +27,10 @@ class _MyAppState extends State<MyApp> {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
+    BaseChannel.init();
     try {
-      platformVersion =
-          await BaseChannel.platformVersion ?? 'Unknown platform version';
+      platformVersion = "";
+          await CommonChannel.platformVersion ?? 'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }

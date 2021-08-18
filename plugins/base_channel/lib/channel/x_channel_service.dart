@@ -1,3 +1,5 @@
+
+
 import 'package:base_channel/channel/x_base_channel_handler.dart';
 import 'package:base_channel/channel/x_channel_handler.dart';
 import 'package:base_channel/channel/x_service_log.dart';
@@ -29,16 +31,12 @@ class XChannelService {
           XServiceLog.i("channel参数格式错误:${call?.arguments}");
         }
       }
-      return Future.value();
+      return Future.value(null);
     });
   }
 
   static XChannelService getInstance(){
-    return XChannelService("XWY_XMethodChannel");
-  }
-
-  factory XChannelService(String channelName) {
-    return XChannelService._(channelName);
+    return _instance ??= XChannelService._("XWY_XMethodChannel");
   }
 
   void registerChannelHandler(XChannelHandler channelHandler) {
