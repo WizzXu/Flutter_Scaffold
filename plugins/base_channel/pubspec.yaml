@@ -1,0 +1,30 @@
+name: base_channel
+description: 基础channel封装
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.20.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  pigeon: ^0.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+  plugin:
+    platforms:
+      android:
+        package: com.github.wizz.basechannel
+        pluginClass: BaseChannelPlugin
+      ios:
+        pluginClass: BaseChannelPlugin
+
+
