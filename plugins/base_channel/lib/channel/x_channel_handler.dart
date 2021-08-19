@@ -12,7 +12,13 @@ class XChannelHandler extends XBaseChannelHandler {
   }
 
   @override
-  Future handlerMethodChannel(String method, {Map<String, dynamic>? arguments}) {
+  Future handlerMethodChannel(String method, {Map<dynamic, dynamic>? arguments}) {
+    print("xwy--->"+method);
+
+    if(method == "getInfo"){
+      return Future.value({"ret": "info"});
+    }
+
     return Future.value(null);
   }
 

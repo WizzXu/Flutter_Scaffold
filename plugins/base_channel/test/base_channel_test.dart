@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:base_channel/base_channel.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('base_channel');
+  const MethodChannel channel = MethodChannel('XWY_XMethodChannel');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -18,6 +18,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    //expect(await BaseChannel.platformVersion, '42');
+    expect(await CommonChannel.platformVersion, '42');
   });
 }

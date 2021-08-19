@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:base_channel/base_channel.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  XChannelService.registerChannelHandler(XChannelHandler());
   runApp(MyApp());
 }
 
@@ -22,6 +24,7 @@ class _MyAppState extends State<MyApp> {
     initPlatformState();
   }
 
+
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String platformVersion;
@@ -29,8 +32,8 @@ class _MyAppState extends State<MyApp> {
     // We also handle the message potentially returning null.
     BaseChannel.init();
     try {
-      platformVersion = "";
-          await CommonChannel.platformVersion ?? 'Unknown platform version';
+      var ret = await CommonChannel.platformVersion;
+      platformVersion = ret.toString();
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }

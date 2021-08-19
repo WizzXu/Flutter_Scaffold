@@ -9,6 +9,6 @@ export 'common_channel.dart';
 
 class BaseChannel {
   static init(){
-    XChannelService.getInstance().registerChannelHandler(XChannelHandler());
+    //XChannelService.getInstance().registerChannelHandler(XChannelHandler());
   }
 }

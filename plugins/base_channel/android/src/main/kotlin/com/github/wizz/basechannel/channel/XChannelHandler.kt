@@ -6,7 +6,7 @@ package com.github.wizz.basechannel.channel
  * Email: wizz.xu@outlook.com
  * Description:
  */
-class XChannelHandler : XBaseChannelHandler {
+class XChannelHandler : XIChannelHandler {
     companion object {
         const val CHANNEL_NAME = "XChannelHandler"
     }
@@ -15,12 +15,14 @@ class XChannelHandler : XBaseChannelHandler {
         return CHANNEL_NAME
     }
 
-    override fun handlerMethodChannel(method:String, arguments:Map<String, *>?): Map<String, *> {
-        return when (method) {
+    override fun handlerMethodChannel(method: String, arguments: Map<*, *>?,
+                                      messageResult: XMessageResult<Any>) {
+        when (method) {
             "getPlatformVersion" -> {
-                mapOf<String, @JvmSuppressWildcards Any?>("result" to "Android ${android.os.Build.VERSION.RELEASE}")
+                messageResult.success(
+                        mapOf("result" to "Android ${android.os.Build.VERSION.RELEASE}"))
             }
-            else -> mapOf<String, @JvmSuppressWildcards Any?>()
+            else -> messageResult.notImplemented()
         }
     }
 }

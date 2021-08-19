@@ -1,4 +1,4 @@
-
+import 'dart:collection';
 
 import 'package:base_channel/channel/x_base_channel_handler.dart';
 import 'package:base_channel/channel/x_channel_handler.dart';
@@ -10,40 +10,43 @@ import 'package:flutter/services.dart';
 /// Email: wizz.xu@outlook.com
 /// Description:
 class XChannelService {
-
   static XChannelService? _instance;
   late MethodChannel _methodChannel;
 
-  final Map<String, XBaseChannelHandler?> _channelHandlers = new Map();
+  static final Map<String, XBaseChannelHandler?> _channelHandlers = new Map();
 
   XChannelService._(String methodChannel) {
-    this._methodChannel = MethodChannel(methodChannel);
-    this._methodChannel.setMethodCallHandler((MethodCall? call) {
+    MethodChannel channel = MethodChannel(methodChannel);
+    channel.setMethodCallHandler((MethodCall? call) async {
       XBaseChannelHandler? handler = _channelHandlers[call?.method];
+      XServiceLog.i("-->XChannelService:${call?.method} ");
+      XServiceLog.i("-->XChannelService:${call?.arguments} ");
       if (handler == null) {
         XServiceLog.i("channel插件不存在:${call?.method} ");
       } else {
         if (call?.arguments == null ||
-            call?.arguments is Map<String, dynamic>) {
-          return handler.handlerMethodChannel(call?.method ?? "",
-              arguments: call?.arguments);
+            call?.arguments is LinkedHashMap<dynamic, dynamic>) {
+          return await handler.handlerMethodChannel(call?.arguments["method"] ?? "",
+              arguments: Map.from(call?.arguments));
         } else {
-          XServiceLog.i("channel参数格式错误:${call?.arguments}");
+          XServiceLog.i("channel参数格式错误:${call?.arguments}:${call?.arguments.runtimeType.toString()}");
         }
       }
       return Future.value(null);
     });
+    this._methodChannel = channel;
   }
 
-  static XChannelService getInstance(){
+  static XChannelService getInstance() {
     return _instance ??= XChannelService._("XWY_XMethodChannel");
   }
 
-  void registerChannelHandler(XChannelHandler channelHandler) {
+  static void registerChannelHandler(XChannelHandler channelHandler) {
+    XServiceLog.i("-->XChannelService:registerChannelHandler:${channelHandler.getChannelName()} ");
     _channelHandlers[channelHandler.getChannelName()] = channelHandler;
   }
 
-  void removeChannelHandler(XChannelHandler channelHandler) {
+  static void removeChannelHandler(XChannelHandler channelHandler) {
     _channelHandlers.remove(channelHandler.getChannelName());
   }
 
