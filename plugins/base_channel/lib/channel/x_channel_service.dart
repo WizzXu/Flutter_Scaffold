@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:base_channel/channel/x_base_channel_handler.dart';
 import 'package:base_channel/channel/x_channel_handler.dart';
 import 'package:base_channel/channel/x_service_log.dart';
@@ -15,8 +13,8 @@ class XChannelService {
 
   static final Map<String, XBaseChannelHandler?> _channelHandlers = new Map();
 
-  XChannelService._(String methodChannel) {
-    MethodChannel channel = MethodChannel(methodChannel);
+  XChannelService._() {
+    MethodChannel channel = MethodChannel("com.github.wizz.XMethodChannel");
     channel.setMethodCallHandler((MethodCall? call) {
       XBaseChannelHandler? handler = _channelHandlers[call?.method];
       XServiceLog.i("XChannelService-->要调用的插件名称:${call?.method}"
@@ -38,7 +36,7 @@ class XChannelService {
   }
 
   static XChannelService getInstance() {
-    return _instance ??= XChannelService._("XWY_XMethodChannel");
+    return _instance ??= XChannelService._();
   }
 
   static void registerChannelHandler(XChannelHandler channelHandler) {

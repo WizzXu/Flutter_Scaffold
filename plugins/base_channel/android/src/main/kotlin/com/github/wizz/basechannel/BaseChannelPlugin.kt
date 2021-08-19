@@ -15,21 +15,24 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 /** BaseChannelPlugin */
 class BaseChannelPlugin : FlutterPlugin, MethodCallHandler {
+    private val TAG: String = "BaseChannelPlugin-Java"
     private lateinit var channel: MethodChannel
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "XWY_XMethodChannel")
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.github.wizz.XMethodChannel")
         channel.setMethodCallHandler(this)
         XChannelService.getInstance().init(channel)
         XChannelService.getInstance().registerChannelHandler(XChannelHandler())
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-        Log.e("--->BaseChannelPlugin", call.method)
-        Log.e("--->BaseChannelPlugin", call.arguments.toString())
-
+        Log.i(TAG, "组件名称:${call.method} 参数:${call.arguments}")
         if (call.arguments is Map<*, *>) {
-            XChannelService.getInstance().handlerMethodChannel(call.method, call.arguments as Map<*, *>, XMessageResult(result))
+            XChannelService.getInstance().handlerMethodChannel(
+                call.method,
+                call.arguments as Map<*, *>,
+                XMessageResult(result)
+            )
         } else {
             result.notImplemented()
         }
