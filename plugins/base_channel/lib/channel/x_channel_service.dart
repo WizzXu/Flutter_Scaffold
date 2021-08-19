@@ -17,19 +17,19 @@ class XChannelService {
 
   XChannelService._(String methodChannel) {
     MethodChannel channel = MethodChannel(methodChannel);
-    channel.setMethodCallHandler((MethodCall? call) async {
+    channel.setMethodCallHandler((MethodCall? call) {
       XBaseChannelHandler? handler = _channelHandlers[call?.method];
-      XServiceLog.i("-->XChannelService:${call?.method} ");
-      XServiceLog.i("-->XChannelService:${call?.arguments} ");
+      XServiceLog.i("XChannelService-->要调用的插件名称:${call?.method}"
+          ":参数:${call?.arguments}}");
       if (handler == null) {
-        XServiceLog.i("channel插件不存在:${call?.method} ");
+        XServiceLog.i("XChannelService-->要调用的插件不存在:${call?.method}");
       } else {
-        if (call?.arguments == null ||
-            call?.arguments is LinkedHashMap<dynamic, dynamic>) {
-          return await handler.handlerMethodChannel(call?.arguments["method"] ?? "",
+        if (call?.arguments != null && call?.arguments is Map) {
+          return handler.handlerMethodChannel(call?.arguments["method"] ?? "",
               arguments: Map.from(call?.arguments));
         } else {
-          XServiceLog.i("channel参数格式错误:${call?.arguments}:${call?.arguments.runtimeType.toString()}");
+          XServiceLog.i(
+              "XChannelService-->调用插件参数格式错误:${call?.arguments.runtimeType.toString()}");
         }
       }
       return Future.value(null);
@@ -42,11 +42,12 @@ class XChannelService {
   }
 
   static void registerChannelHandler(XChannelHandler channelHandler) {
-    XServiceLog.i("-->XChannelService:registerChannelHandler:${channelHandler.getChannelName()} ");
+    XServiceLog.i("XChannelService-->注册插件:${channelHandler.getChannelName()}");
     _channelHandlers[channelHandler.getChannelName()] = channelHandler;
   }
 
   static void removeChannelHandler(XChannelHandler channelHandler) {
+    XServiceLog.i("XChannelService-->清除插件:${channelHandler.getChannelName()}");
     _channelHandlers.remove(channelHandler.getChannelName());
   }
 
