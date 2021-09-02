@@ -26,5 +26,14 @@ Java_com_example_jnidemo_MainActivity_getBytesFromJNI(JNIEnv *env, jobject thiz,
 
     jbyteArray ret = env->NewByteArray(6);
     env->SetByteArrayRegion (ret, 0, 6, ret_a);
+
+    //获取class对象
+    jclass jclass_student = env->GetObjectClass(thiz);
+    //2 调用java对象中的方法
+
+    //获取class对象中的print方法
+    jmethodID getBytes = env->GetMethodID(jclass_student, "getBytes", "([B)[B");
+    //调用java对象中的print方法
+    //env->CallByte(jobject1, print);
     return ret;
 }
