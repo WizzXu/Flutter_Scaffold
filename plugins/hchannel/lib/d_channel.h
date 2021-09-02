@@ -1,0 +1,1 @@
+char *transByte(char *arg);
