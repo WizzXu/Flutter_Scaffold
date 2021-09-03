@@ -1,1 +1,1 @@
-char *transByte(char *arg);
+char *callNative(char *arg);

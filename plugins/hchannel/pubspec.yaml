@@ -31,7 +31,7 @@ flutter:
 ffigen:
   name: NativeLibrary
   description: Bindings to `headers/example.h`.
-  output: 'generated_bindings.dart'
+  output: 'lib/h_channel_dart_api.dart'
   headers:
     entry-points:
       - 'lib/d_channel.h'

@@ -19,24 +19,24 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  ffi.Pointer<ffi.Int8> transByte(
+  ffi.Pointer<ffi.Int8> callNative(
     ffi.Pointer<ffi.Int8> arg,
   ) {
-    return _transByte(
+    return _callNative(
       arg,
     );
   }
 
-  late final _transByte_ptr =
-      _lookup<ffi.NativeFunction<_c_transByte>>('transByte');
-  late final _dart_transByte _transByte =
-      _transByte_ptr.asFunction<_dart_transByte>();
+  late final _callNative_ptr =
+      _lookup<ffi.NativeFunction<_c_callNative>>('callNative');
+  late final _dart_callNative _callNative =
+      _callNative_ptr.asFunction<_dart_callNative>();
 }
 
-typedef _c_transByte = ffi.Pointer<ffi.Int8> Function(
+typedef _c_callNative = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<ffi.Int8> arg,
 );
 
-typedef _dart_transByte = ffi.Pointer<ffi.Int8> Function(
+typedef _dart_callNative = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<ffi.Int8> arg,
 );
