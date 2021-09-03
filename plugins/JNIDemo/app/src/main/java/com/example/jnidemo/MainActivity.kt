@@ -21,11 +21,6 @@ class MainActivity : AppCompatActivity() {
         //val byteArray:ByteArray = getBytesFromJNI(byteArrayOf(1,2,3,4,5,6))
     }
 
-    fun getBytes(byteArray: ByteArray):ByteArray{
-        Log.e("获取byteArray，入参为：", byteArray.toUByteArray().toString())
-        return byteArrayOf(1,2,3,4,5,6)
-    }
-
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.

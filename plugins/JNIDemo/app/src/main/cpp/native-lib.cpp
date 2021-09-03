@@ -22,18 +22,17 @@ Java_com_example_jnidemo_MainActivity_getBytesFromJNI(JNIEnv *env, jobject thiz,
         LOGI("[%d]", *(p_byte_array + i));
 
     env->ReleaseByteArrayElements(byte_array, p_byte_array, NULL);
-    jbyte ret_a[] = {5,5,5,5,5,5};
 
-    jbyteArray ret = env->NewByteArray(6);
-    env->SetByteArrayRegion (ret, 0, 6, ret_a);
+    jbyteArray ret = env->NewByteArray(byte_array_size);
+    env->SetByteArrayRegion (ret, 0, byte_array_size, p_byte_array);
 
     //获取class对象
-    jclass jclass_student = env->GetObjectClass(thiz);
+    jclass jDChannel = env->FindClass("com/example/jnidemo/DChannelJava");
     //2 调用java对象中的方法
 
     //获取class对象中的print方法
-    jmethodID getBytes = env->GetMethodID(jclass_student, "getBytes", "([B)[B");
+    jmethodID getBytes = env->GetStaticMethodID(jDChannel, "callNative", "([B)[B");
     //调用java对象中的print方法
-    //env->CallByte(jobject1, print);
-    return ret;
+    auto ret_2 = (jbyteArray)(env->CallStaticObjectMethod(jDChannel , getBytes, ret));
+    return ret_2;
 }
