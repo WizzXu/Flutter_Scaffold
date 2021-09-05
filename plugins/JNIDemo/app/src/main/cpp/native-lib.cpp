@@ -17,8 +17,7 @@ Java_com_example_jnidemo_MainActivity_getBytesFromJNI(JNIEnv *env, jobject thiz,
     jint byte_array_size = env->GetArrayLength(byte_array);
     jbyte *p_byte_array = (*env).GetByteArrayElements(byte_array, nullptr);
 
-    int i;
-    for (i = 0; i < byte_array_size; i++)
+    for (int i = 0; i < byte_array_size; i++)
         LOGI("[%d]", *(p_byte_array + i));
 
     env->ReleaseByteArrayElements(byte_array, p_byte_array, NULL);
@@ -35,4 +34,10 @@ Java_com_example_jnidemo_MainActivity_getBytesFromJNI(JNIEnv *env, jobject thiz,
     //调用java对象中的print方法
     auto ret_2 = (jbyteArray)(env->CallStaticObjectMethod(jDChannel , getBytes, ret));
     return ret_2;
+}
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
+    LOGI("JNI_OnLoad");
+
+    return JNI_VERSION_1_6;
 }

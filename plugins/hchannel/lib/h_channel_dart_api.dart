@@ -19,11 +19,13 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  ffi.Pointer<ffi.Int8> callNative(
-    ffi.Pointer<ffi.Int8> arg,
+  ffi.Pointer<ByteArray> callNative(
+    ffi.Pointer<ffi.Int8> data,
+    int length,
   ) {
     return _callNative(
-      arg,
+      data,
+      length,
     );
   }
 
@@ -33,10 +35,19 @@ class NativeLibrary {
       _callNative_ptr.asFunction<_dart_callNative>();
 }
 
-typedef _c_callNative = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg,
+class ByteArray extends ffi.Struct {
+  external ffi.Pointer<ffi.Int8> data;
+
+  @ffi.Int32()
+  external int length;
+}
+
+typedef _c_callNative = ffi.Pointer<ByteArray> Function(
+  ffi.Pointer<ffi.Int8> data,
+  ffi.Int32 length,
 );
 
-typedef _dart_callNative = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg,
+typedef _dart_callNative = ffi.Pointer<ByteArray> Function(
+  ffi.Pointer<ffi.Int8> data,
+  int length,
 );
