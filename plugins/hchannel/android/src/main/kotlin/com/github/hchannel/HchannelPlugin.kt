@@ -1,5 +1,6 @@
 package com.github.hchannel
 
+import android.util.Log
 import androidx.annotation.NonNull
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -7,6 +8,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.StandardMessageCodec
 
 /** HchannelPlugin */
 class HchannelPlugin : FlutterPlugin, MethodCallHandler {
@@ -22,9 +24,17 @@ class HchannelPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-        getBytesFromJNI("Android".toByteArray())
+        /*val byteBuffer = StandardMessageCodec.INSTANCE.encodeMessage("Android")
+        byteBuffer?.flip()
+        val size = byteBuffer?.let { it.limit() - it.position() }
+        val byteArray = size?.let { ByteArray(it) }
+        for ( i in 0 until size!!){
+            byteArray?.set(i, byteBuffer[i])
+        }
+        Log.e("---->", byteArray?.toList().toString())
+        byteArray?.let { getBytesFromJNI(it) }*/
         if (call.method == "getPlatformVersion") {
-            result.success("Android ${android.os.Build.VERSION.RELEASE}")
+            result.success(call.arguments)
         } else {
             result.notImplemented()
         }

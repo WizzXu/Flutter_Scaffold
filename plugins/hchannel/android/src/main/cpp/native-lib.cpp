@@ -117,16 +117,16 @@ jclass _findClass(JNIEnv *env, const char *name) {
     /// class loader not found class
     if (exception) {
         env->ExceptionClear();
-        LOGI("FindClass Exception:%s", name);
+        //LOGI("FindClass Exception:%s", name);
         jstring nameStringUTF = env->NewStringUTF(name);
         jclass classLoaderFindClass = static_cast<jclass>(env->CallObjectMethod(
                 gClassLoader->Object(),
                 gFindClassMethod,
                 nameStringUTF));
         if (classLoaderFindClass != nullptr) {
-            LOGI("ClassLoader FindClass Success:%s", name);
+            //LOGI("ClassLoader FindClass Success:%s", name);
         } else {
-            LOGE("ClassLoader FindClass Fail!");
+            //LOGE("ClassLoader FindClass Fail!");
         }
         env->DeleteLocalRef(nameStringUTF);
         return classLoaderFindClass;
@@ -150,7 +150,7 @@ DART_API ByteArray *callNative(char *data, int length) {
 
 
     int ret_java_length = env->GetArrayLength(ret_java);
-    LOGD("ret_java_length:[%d]", ret_java_length);
+    //LOGD("ret_java_length:[%d]", ret_java_length);
 
     auto *result = (ByteArray *) malloc(sizeof(ByteArray));
 
