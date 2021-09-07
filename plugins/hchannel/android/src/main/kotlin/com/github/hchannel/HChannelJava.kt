@@ -12,14 +12,16 @@ import java.nio.ByteBuffer
  */
 object HChannelJava {
     @JvmStatic
-    fun callNative(argument: ByteArray?): ByteArray {
+    fun callNative(argument: ByteArray?): ByteArray? {
         //Log.d("HChannelJava 入参---->", argument?.toList().toString())
         //Log.d("HChannelJava 入参---->", argument?.toList()?.size.toString())
-        var s: String =
-            StandardMessageCodec.INSTANCE.decodeMessage(ByteBuffer.wrap(argument)) as String
+        argument?.let {
+            var s: String =
+                StandardMessageCodec.INSTANCE.decodeMessage(ByteBuffer.wrap(argument)) as String
+        }
         //Log.d("HChannelJava 入参---->", s)
 
         //Log.d("HChannelJava执行线程：", "${Thread.currentThread().name} ")
-        return argument ?: byteArrayOf() //byteArrayOf(1, 2, 3, 4, 5, 9)
+        return argument  //byteArrayOf(1, 2, 3, 4, 5, 9)
     }
 }

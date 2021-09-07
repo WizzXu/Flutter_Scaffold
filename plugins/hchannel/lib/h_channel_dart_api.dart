@@ -33,6 +33,19 @@ class NativeLibrary {
       _lookup<ffi.NativeFunction<_c_callNative>>('callNative');
   late final _dart_callNative _callNative =
       _callNative_ptr.asFunction<_dart_callNative>();
+
+  void freeByteArray(
+    ffi.Pointer<ByteArray> byteArray,
+  ) {
+    return _freeByteArray(
+      byteArray,
+    );
+  }
+
+  late final _freeByteArray_ptr =
+      _lookup<ffi.NativeFunction<_c_freeByteArray>>('freeByteArray');
+  late final _dart_freeByteArray _freeByteArray =
+      _freeByteArray_ptr.asFunction<_dart_freeByteArray>();
 }
 
 class ByteArray extends ffi.Struct {
@@ -50,4 +63,12 @@ typedef _c_callNative = ffi.Pointer<ByteArray> Function(
 typedef _dart_callNative = ffi.Pointer<ByteArray> Function(
   ffi.Pointer<ffi.Int8> data,
   int length,
+);
+
+typedef _c_freeByteArray = ffi.Void Function(
+  ffi.Pointer<ByteArray> byteArray,
+);
+
+typedef _dart_freeByteArray = void Function(
+  ffi.Pointer<ByteArray> byteArray,
 );

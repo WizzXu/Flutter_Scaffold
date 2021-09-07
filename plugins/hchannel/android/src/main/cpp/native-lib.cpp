@@ -18,6 +18,7 @@ static JavaVM *gJvm = nullptr;
 static jmethodID gFindClassMethod;
 static JavaGlobalRef<jobject> *gClassLoader = nullptr;
 static pthread_key_t detachKey = 0;
+static jclass gNativeClass;
 
 static char nativeClassname[] = "com/github/hchannel/HChannelJava";
 
@@ -49,7 +50,7 @@ Java_com_github_hchannel_HchannelPlugin_getBytesFromJNI(JNIEnv *env, jobject thi
     //获取class对象中的print方法
     jmethodID callNative = env->GetStaticMethodID(jDChannel, "callNative", "([B)[B");
     //调用java对象中的print方法
-    auto ret_2 = (jbyteArray) (env->CallStaticObjectMethod(jDChannel, callNative, ret));
+    auto ret_2 = (jbyteArray)(env->CallStaticObjectMethod(jDChannel, callNative, ret));
     return ret_2;
 }
 
@@ -117,7 +118,11 @@ jclass _findClass(JNIEnv *env, const char *name) {
     /// class loader not found class
     if (exception) {
         env->ExceptionClear();
-        //LOGI("FindClass Exception:%s", name);
+        if (gNativeClass != nullptr){
+            return gNativeClass;
+        }
+
+        LOGI("FindClass Exception:%s", name);
         jstring nameStringUTF = env->NewStringUTF(name);
         jclass classLoaderFindClass = static_cast<jclass>(env->CallObjectMethod(
                 gClassLoader->Object(),
@@ -125,6 +130,7 @@ jclass _findClass(JNIEnv *env, const char *name) {
                 nameStringUTF));
         if (classLoaderFindClass != nullptr) {
             //LOGI("ClassLoader FindClass Success:%s", name);
+            gNativeClass = classLoaderFindClass;
         } else {
             //LOGE("ClassLoader FindClass Fail!");
         }
@@ -137,30 +143,44 @@ jclass _findClass(JNIEnv *env, const char *name) {
 
 DART_API ByteArray *callNative(char *data, int length) {
     JNIEnv *env = _getEnv();
-    jbyteArray argumentBytes = env->NewByteArray(length);
-    env->SetByteArrayRegion(argumentBytes, 0, length, (jbyte *) data);
-
+    jbyteArray argumentBytes = nullptr;
+    if (data != nullptr && length > 0){
+        argumentBytes = env->NewByteArray(length);
+        env->SetByteArrayRegion(argumentBytes, 0, length, (jbyte *) data);
+    }
     //获取class对象
     jclass jHChannel = _findClass(env, nativeClassname);
+    char methodName[] = "callNative";
+    char methodSig[] = "([B)[B";
 
     //2 调用java对象中的方法
-    jmethodID callNative = env->GetStaticMethodID(jHChannel, "callNative", "([B)[B");
-    auto ret_java = (jbyteArray) (env->CallStaticObjectMethod(jHChannel, callNative,
-                                                                    argumentBytes));
+    jmethodID callNative = env->GetStaticMethodID(jHChannel, methodName, methodSig);
+    jbyteArray ret_java = (jbyteArray)(env->CallStaticObjectMethod(jHChannel, callNative,
+                                                             argumentBytes));
+    ByteArray *result = nullptr;
+    if (ret_java != nullptr){
+        int ret_java_length = env->GetArrayLength(ret_java);
+        //LOGD("ret_java_length:[%d]", ret_java_length);
+        result = (ByteArray *) malloc(sizeof(ByteArray));
 
+        result->length = ret_java_length;
+        result->data = (char *) malloc(result->length * sizeof(char));
+        jbyte *byte = env->GetByteArrayElements(ret_java, nullptr);
+        memcpy(result->data, byte, ret_java_length);
 
-    int ret_java_length = env->GetArrayLength(ret_java);
-    //LOGD("ret_java_length:[%d]", ret_java_length);
-
-    auto *result = (ByteArray *) malloc(sizeof(ByteArray));
-
-    result->length = ret_java_length;
-    result->data = (char *) malloc(result->length * sizeof(char));
-    jbyte *byte = env->GetByteArrayElements(ret_java, nullptr);
-    memcpy(result->data, byte, ret_java_length);
-
+        env->ReleaseByteArrayElements(ret_java, byte, 0);
+    }
     // 释放
-    env->ReleaseByteArrayElements(ret_java, byte, 0);
+    env->DeleteLocalRef(ret_java);
     env->DeleteLocalRef(argumentBytes);
+    //free(methodName);
+    //free(methodSig);
     return result;
+}
+
+DART_API void freeByteArray(ByteArray *byteArray) {
+    if (byteArray != nullptr) {
+        free(byteArray->data);
+        free(byteArray);
+    }
 }

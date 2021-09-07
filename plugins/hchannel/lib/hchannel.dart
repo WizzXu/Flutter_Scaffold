@@ -8,8 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:hchannel/h_channel_dart_api.dart';
 
 class Hchannel {
-  static String testString =
-      'This is a long string: sdlfdksjflksndhiofuu2893873(*（%￥#@）*&……￥撒肥料开发时傅雷家书那份会计师东方丽景三等奖';
+  static String testString =  //"uqwettttimmmm";
+
+  'This is a long string: sdlfdksjflksndhiofuu2893873(*（%￥#@）*&……￥撒肥料开发时傅雷家书那份会计师东方丽景三等奖';
   static const MethodChannel _channel = const MethodChannel('hchannel');
   static NativeLibrary library =
       NativeLibrary(DynamicLibrary.open("libnative-lib.so"));
@@ -26,13 +27,11 @@ class Hchannel {
     }
     print("HChannel花费时间：" + (DateTime.now().millisecondsSinceEpoch - time).toString());
 
-    /*time = DateTime.now().millisecondsSinceEpoch;
-    for (int i = 0; i < loopsize; i++) {
-      //version = await _channel.invokeMethod('getPlatformVersion', testString);
-    }
-    print("Flutter Channel花费时间：" + (DateTime.now().millisecondsSinceEpoch - time).toString());
-*/
-    version = "结束";
+    // time = DateTime.now().millisecondsSinceEpoch;
+    // for (int i = 0; i < loopsize; i++) {
+    //   version = await _channel.invokeMethod('getPlatformVersion', testString);
+    // }
+    // print("Flutter Channel花费时间：" + (DateTime.now().millisecondsSinceEpoch - time).toString());
     return "HChannel花费时间：" + (DateTime.now().millisecondsSinceEpoch - time).toString();
   }
 
@@ -47,7 +46,7 @@ class Hchannel {
 
     ByteData? byteData = standardMessageCodec.encodeMessage(object);
     //print("----------------");
-    Int8List int8list = byteData?.buffer.asInt8List() ?? new Int8List(0);
+    Uint8List int8list = byteData?.buffer.asUint8List() ?? new Uint8List(0);
     //print(int8list);
     //print(int8list.length.toString());
 
@@ -64,6 +63,9 @@ class Hchannel {
     //print(ret.ref.data.asTypedList(ret.ref.length));
     //释放内存
     malloc.free(byte);
-    malloc.free(ret);
+    //malloc.free(ret);
+    library.freeByteArray(ret);
+
+
   }
 }

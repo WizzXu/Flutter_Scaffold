@@ -17,8 +17,8 @@ Java_com_example_jnidemo_MainActivity_getBytesFromJNI(JNIEnv *env, jobject thiz,
     jint byte_array_size = env->GetArrayLength(byte_array);
     jbyte *p_byte_array = (*env).GetByteArrayElements(byte_array, nullptr);
 
-    for (int i = 0; i < byte_array_size; i++)
-        LOGI("[%d]", *(p_byte_array + i));
+    /*for (int i = 0; i < byte_array_size; i++)
+        LOGI("[%d]", *(p_byte_array + i));*/
 
     env->ReleaseByteArrayElements(byte_array, p_byte_array, NULL);
 
